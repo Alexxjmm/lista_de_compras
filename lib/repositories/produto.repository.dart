@@ -16,7 +16,24 @@ class ProdutoRepository {
   }
 
   List<Produto> read() {
-    return produtos;
+    List<Produto> comprado = [];
+    List<Produto> ncomprado = [];
+    List<Produto> resposta = [];
+
+    for (Produto x in produtos) {
+      if (x.finalizado == true) {
+        ncomprado.add(x);
+      } else {
+        comprado.add(x);
+      }
+    }
+    for (Produto x in comprado) {
+      resposta.add(x);
+    }
+    for (Produto x in ncomprado) {
+      resposta.add(x);
+    }
+    return resposta;
   }
 
   void delete(String texto) {

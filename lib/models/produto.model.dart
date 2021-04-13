@@ -5,5 +5,12 @@ class Produto {
 
   bool finalizado;
 
-  Produto({this.name,this.quantidade = "0", this.id, this.finalizado = false});
+  bool emFalta;
+
+  Produto(
+      {this.name,
+      this.quantidade = "0",
+      this.id,
+      this.finalizado = false,
+      this.emFalta = false});
 }

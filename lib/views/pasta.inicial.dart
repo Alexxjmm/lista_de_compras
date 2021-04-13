@@ -37,6 +37,15 @@ class _PastaInicialState extends State<PastaInicial> {
     }
   }
 
+  Future produtoEmfalta(BuildContext context, Produto produto) async {
+    produto.emFalta = !produto.emFalta;
+    if (produto.emFalta == true) {
+      produto.quantidade = "Em falta";
+    } else {
+      produto.quantidade = "1";
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,27 +66,44 @@ class _PastaInicialState extends State<PastaInicial> {
               onDismissed: (_) => repository.delete(produto.name),
               child: Column(children: [
                 CheckboxListTile(
-                  title: Text(
-                    produto.name,
-                    style: TextStyle(
-                      decoration: produto.finalizado
-                          ? TextDecoration.lineThrough
-                          : TextDecoration.none,
+                  title: Row(children: [
+                    Text(
+                      produto.name,
+                      style: TextStyle(
+                        decoration: produto.finalizado
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      ),
                     ),
-                  ),
+                    Row(mainAxisAlignment: MainAxisAlignment.end, children: [
+                      TextButton.icon(
+                        onPressed: () => atualizarProduto(context, produto),
+                        icon: Icon(Icons.edit),
+                        label: Text(""),
+                      ),
+                      TextButton.icon(
+                        onPressed: () {
+                          produtoEmfalta(context, produto);
+                          this.produtos = repository.read();
+                          setState(() {});
+                        },
+                        icon: Icon(
+                          Icons.warning,
+                          color: Colors.red[400],
+                        ),
+                        label: Text(""),
+                      ),
+                    ])
+                  ]),
                   subtitle: Text(produto.quantidade),
                   value: produto.finalizado,
                   onChanged: (value) {
-                    setState(() => produto.finalizado = value);
+                    setState(() {
+                      produto.finalizado = value;
+                      this.produtos = repository.read();
+                    });
                   },
                 ),
-                TextButton(
-                  onPressed: () => atualizarProduto(context, produto),
-                  child: Text(
-                    "Editar",
-                    style: TextStyle(color: Colors.green[300]),
-                  ),
-                )
               ]),
             );
           }),
